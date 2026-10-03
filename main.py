@@ -30,7 +30,7 @@ def read_root():
         "docs_url": "/docs"
     }
 
-# Değişiklik: Fonksiyonu 'async def' yaparak asenkron hale getirdik
+# Fonksiyon asenkron hale getirildi
 @app.post("/api/chatbot/send")
 async def send_message(request: ChatRequest):
     try:
@@ -50,9 +50,9 @@ async def send_message(request: ChatRequest):
             f"Lütfen talebi analiz et, çözüm önerisi sun ve kurumsal bir dille yardımcı ol."
         )
         
-        # Kesin Çözüm: Model ismini "gemini-2.0-flash" olarak güncelledik
+        # GÜNCELLEME: Kullanımdan kaldırılan gemini-2.0-flash yerine güncel gemini-3.5-flash entegre edildi
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-3.5-flash",
             contents=prompt
         )
         
