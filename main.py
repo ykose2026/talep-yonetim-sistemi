@@ -30,8 +30,9 @@ def read_root():
         "docs_url": "/docs"
     }
 
+# Değişiklik: Fonksiyonu 'async def' yaparak asenkron hale getirdik
 @app.post("/api/chatbot/send")
-def send_message(request: ChatRequest):
+async def send_message(request: ChatRequest):
     try:
         # Render Environment Variables üzerinden anahtarı alıyoruz
         api_key = os.environ.get("GEMINI_API_KEY")
@@ -49,8 +50,9 @@ def send_message(request: ChatRequest):
             f"Lütfen talebi analiz et, çözüm önerisi sun ve kurumsal bir dille yardımcı ol."
         )
         
+        # Kesin Çözüm: Model ismini "gemini-2.0-flash" olarak güncelledik
         response = client.models.generate_content(
-            model="gemini-3-8-flash",
+            model="gemini-2.0-flash",
             contents=prompt
         )
         
