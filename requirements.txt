@@ -3,4 +3,4 @@ uvicorn
 pydantic
 google-genai
 sqlalchemy
-psycopg2-binary
+pg8000

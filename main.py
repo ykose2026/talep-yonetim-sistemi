@@ -22,11 +22,13 @@ app = FastAPI(
 # Render üzerindeki PostgreSQL bağlantı adresini alıyoruz
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-    # SQLAlchemy uyumluluğu için postgres:// ifadesini postgresql:// yapıyoruz
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-if not DATABASE_URL:
+# GÜNCELLEME: Render Linux sunucularında sıfır hata ile çalışması için pg8000 sürücüsünü entegre ediyoruz
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+pg8000://", 1)
+    elif DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+pg8000://", 1)
+else:
     # Lokal testlerinizde veya hata durumunda çökmemesi için fallback (SQLite)
     DATABASE_URL = "sqlite:///./local_test.db"
 
@@ -42,10 +44,10 @@ class TalepModel(Base):
     Department = Column(String(100), nullable=False)
     Message = Column(Text, nullable=False)
     AiResponse = Column(Text, nullable=False)
-    # Python 3.12+ standartlarına göre güncellenmiş utc zaman damgası
+    # Python standartlarına göre güncellenmiş UTC zaman damgası
     CreatedAt = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-# Tablo yoksa otomatik oluşturulur
+# Tablo yoksa veritabanında otomatik oluşturulur
 Base.metadata.create_all(bind=engine)
 
 # İstek gövdesi için Pydantic modeli
